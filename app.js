@@ -12,6 +12,7 @@ async function createUser(){
     createUser();
     */
 
+/* 
     //PART 1
     async function getGIPHY(){ 
         const result = await axios.get('http://api.giphy.com/v1/gifs/search?q=hilarious&api_key=MhAodEJIJxQMxW9XqxKjyXfNYdLoOIym');
@@ -27,7 +28,7 @@ async function createUser(){
         }
 
         function appendingAction(queryResult){
-        //const queryResult = await axios.get('api.giphy.com/v1/gifs/search', { params: { inputValue } });
+        //const queryResult = await axios.get('https://api.giphy.com/v1/gifs/search', { params: { inputValue } });
         const divArea = document.querySelector('#gifArea');
         let numOfResults = queryResult.data.length;
         for(let gif of queryResult){
@@ -44,19 +45,74 @@ async function createUser(){
         return divArea
     }
 
-    async function searchFormAction(){
-        //e.preventDefault();
+    async function searchFormAction(e){
+        e.preventDefault();
         const inputValue = document.querySelector('#inputData').value;
         const getQuery = await axios.get(`api.giphy.com/v1/gifs/search/${inputValue}`);
         appendingAction(getQuery);
     }
-/*
+
     function clearInputValue(){
         let inputVal = document.querySelector('#inputData').value;
         inputVal = '';
 
         //return inputVal
     }
-*/
-    //getGIPHY();
+
+    getGIPHY();
     submitAction();
+*/
+
+  //PART 1
+  async function getGIPHY(){ 
+    const result = await axios.get('http://api.giphy.com/v1/gifs/search?q=hilarious&api_key=MhAodEJIJxQMxW9XqxKjyXfNYdLoOIym');
+    console.log(result);
+}
+
+async function getRandomGif(){
+    let result = await axios.get("http://api.giphy.com/v1/gifs/search", {
+            params: {
+              q: '404',
+              api_key: "TtBAKOWl3aXTbRXsyLjbNAc6yc6zUavS"
+            }
+          });
+    //console.log(result.data);
+    let areaForImages = document.querySelector("#gifArea");
+    let firstImage = document.querySelector('#img1');
+    firstImage.src = result.data;
+}
+
+//Get Gif By Search
+async function getGifBySearch(searchTerm){
+    try{
+        //let url = `https://api.giphy.com/v1/gifs/search/${searchTerm}`;
+        //let result = await axios.get(url);
+
+        //let result = await axios.get(`http://api.giphy.com/v1/gifs/search/${searchTerm}`)
+        
+        let result = await axios.get("http://api.giphy.com/v1/gifs/search", {
+            params: {
+              q: searchTerm,
+              api_key: "TtBAKOWl3aXTbRXsyLjbNAc6yc6zUavS"
+            }
+          });
+
+        let gif1 = document.querySelector(`#img1`);
+        gif1.src = result.data;
+    }catch(e){
+        alert('No Giphys found');
+        getRandomGif();
+    }
+}
+
+const form = document.querySelector('#searchForm');
+
+form.addEventListener('submit', function(e){
+    e.preventDefault();
+    let input  = document.querySelector('#inputData');
+    let gifArea = document.querySelector('#gifArea');
+
+    gifArea.append(getGifBySearch(input.value));
+    input.value='';
+});
+
